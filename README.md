@@ -11,7 +11,7 @@ yarn install @companycam/companycam-vibe-check
 ## Usage
 
 ```js
-import { multiply } from 'companycam-vibe-check';
+import { vibes } from 'companycam-vibe-check';
 
 // ...
 
@@ -25,5 +25,3 @@ This project uses conventional commits and semantic-release to automate the rele
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
-
-Devin was here!
