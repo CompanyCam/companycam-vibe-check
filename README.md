@@ -227,7 +227,7 @@ This method will return an object very similar to the below JSON object:
 
 📝 NOTE: Since `iOS` and `Android` expose different thermal states, we've normalized them. Currently we use `iOS` nomenclature for the different thermal states. Please refer to the table below.
 
-| thermalState | ios value  | android value                 |
+| thermalState | iOS Value  | Android Value                 |
 | ------------ | ---------- | ---------------------------------------------------- |
 | `nominal`    | `nominal`  | `THERMAL_STATUS_NONE / THERMAL_STATUS_LIGHT` |
 | `fair`       | `fair`     | `THERMAL_STATUS_MODERATE` |
