@@ -91,7 +91,7 @@ This method will return an object very similar to the below JSON object:
 }
 ```
 
-### setVibeTimeout()
+### setVibeTimeout() / getVibeTimeout()
 
 This method allows you to customize how long the library caches the hardware information. Currently the default for the timeout is X seconds. Setting this value to 0 will query the hardware, in real time, instead of relying on the cached values.
 
