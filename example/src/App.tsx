@@ -6,6 +6,7 @@ import { multiply } from 'companycam-vibe-check';
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
+  // I am a meaningless comment
   React.useEffect(() => {
     multiply(3, 7).then(setResult);
   }, []);
