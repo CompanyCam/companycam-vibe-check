@@ -1,4 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import type { BatteryState } from 'react-native-device-info/lib/typescript/internal/types';
 
 const LINKING_ERROR =
   `The package 'companycam-vibe-check' doesn't seem to be linked. Make sure: \n\n` +
@@ -17,26 +19,20 @@ const CompanycamVibeCheck = NativeModules.CompanycamVibeCheck
       }
     );
 
-// export function multiply(a: number, b: number): Promise<number> {
-//   return CompanycamVibeCheck.multiply(a, b);
-// }
-
-type FullVibeCheckType = {
-  battery: BatteryVibeType;
+export type FullVibeCheckType = {
+  battery: Awaited<BatteryVibeType>;
   connectivity: ConnectionVibeType;
   cpuUsage: number;
-  diskUsage: number;
+  diskUsage: Awaited<number>;
   ramUsage: number;
   thermalState: string;
 };
 
 type BatteryVibeType = {
-  battery: {
-    batteryLevel: number;
-    batteryState: string;
-    lowPowerMode: boolean;
-    isBatteryCharging: boolean;
-  };
+  batteryLevel: number | undefined;
+  batteryState: BatteryState | undefined;
+  lowPowerMode: boolean | undefined;
+  isBatteryCharging: boolean;
 };
 
 type ConnectionVibeType = {
@@ -55,11 +51,11 @@ export const multiply = (a: number, b: number): Promise<number> => {
   return CompanycamVibeCheck.multiply(a, b);
 };
 
-export const getCurrentVibes = (): FullVibeCheckType => {
-  const battery = getBatteryVibe();
-  const connectivity = getConnectionVibe();
+export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
+  const battery = await getBatteryInfo();
+  const connectivity = getConnectionInfo();
   const cpuUsage = getCPUUsage();
-  const diskUsage = getDiskUsage();
+  const diskUsage = await getDiskUsage();
   const ramUsage = getRAMUsage();
   const thermalState = getThermalState();
 
@@ -73,29 +69,25 @@ export const getCurrentVibes = (): FullVibeCheckType => {
   };
 };
 
-export const setVibeTimeout = (timeout: number) => {
-  console.log(timeout);
-};
-
-export const getVibeTimeout = (): number => {
-  return 120;
-};
-
-export const getBatteryVibe = (): BatteryVibeType => {
-  console.log('getBatteryVibe');
+///
+// TODO: Add in threshold for battery level notifications
+// EX: If the battery level is < X%, we should notify the user
+///
+export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
+  const isBatteryCharging = await DeviceInfo.isBatteryCharging();
+  const { batteryLevel, batteryState, lowPowerMode } =
+    await DeviceInfo.getPowerState();
   const batteryVibe = {
-    battery: {
-      batteryLevel: 0.5,
-      batteryState: 'unplugged',
-      lowPowerMode: false,
-      isBatteryCharging: false,
-    },
+    batteryLevel,
+    batteryState,
+    lowPowerMode,
+    isBatteryCharging,
   };
-
+  console.log(batteryVibe);
   return batteryVibe;
 };
 
-export const getConnectionVibe = (): ConnectionVibeType => {
+export const getConnectionInfo = (): ConnectionVibeType => {
   console.log('getConnectionVibe');
   const connectionVibe = {
     connection: {
@@ -116,8 +108,11 @@ export const getCPUUsage = (): number => {
   return 20.0;
 };
 
-export const getDiskUsage = (): number => {
-  return 20.0;
+export const getDiskUsage = async () => {
+  const freeDiskSpace = await DeviceInfo.getFreeDiskStorage();
+  const totalDiskSpace = await DeviceInfo.getTotalDiskCapacity();
+  const percentageOfDiskSpaceUsed = freeDiskSpace / totalDiskSpace;
+  return percentageOfDiskSpaceUsed;
 };
 
 export const getRAMUsage = (): number => {
