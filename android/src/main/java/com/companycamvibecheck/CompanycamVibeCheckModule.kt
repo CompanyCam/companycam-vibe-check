@@ -18,9 +18,9 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   fun multiply(a: Double, b: Double, promise: Promise) {
     promise.resolve(a * b)
   }
-  fun getCurrentVibes(promise: Promise) {
-    promise.resolve();
-  }
+  // fun getCurrentVibes(promise: Promise) {
+  //   promise.resolve();
+  // }
 
   companion object {
     const val NAME = "CompanycamVibeCheck"

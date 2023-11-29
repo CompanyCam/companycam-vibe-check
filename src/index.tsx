@@ -52,8 +52,8 @@ export const multiply = (a: number, b: number): Promise<number> => {
 };
 
 /**
- * Main exposed API endpoint for querying the current device "vibes".
- * @returns {FullVibeCheckType} an object containing all current device vibes.
+ * Function to get device's current {@link https://github.com/CompanyCam/companycam-vibe-check/blob/main/README.md#getcurrentvibes | Vibes}.
+ * @returns A FullVibeCheckType object that contains all current device vibes.
  */
 export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const battery = await getBatteryInfo();
@@ -80,7 +80,7 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
 
 /**
  * Gets the current Battery info from the DeviceInfo library
- * @returns {BatteryVibeType} An BatteryVibeType object that contains all data related to Battery Info
+ * @returns A BatteryVibeType object that contains all data related to Battery Info
  */
 export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
   const isBatteryCharging = await DeviceInfo.isBatteryCharging();
@@ -98,7 +98,7 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
 
 /**
  * Gets the current Connection info from the Reachability library
- * @returns {ConnectionVibeType} An object that contains all data related to Connection Info
+ * @returns A ConnectionVibeType object that contains all data related to Connection Info
  */
 export const getConnectionInfo = (): ConnectionVibeType => {
   console.log('getConnectionVibe');
@@ -119,7 +119,7 @@ export const getConnectionInfo = (): ConnectionVibeType => {
 
 /**
  * Gets the percentage of the CPU currently being used.
- * @returns {number} Current CPU usage percentage
+ * @returns Current CPU usage percentage
  */
 export const getCPUUsage = (): number => {
   return 20.0;
@@ -127,7 +127,7 @@ export const getCPUUsage = (): number => {
 
 /**
  * Gets the total percentage of used disk space on the device from the DeviceInfo library.
- * @returns {number} Current percentage of utilized disk space
+ * @returns Current percentage of utilized disk space
  */
 export const getDiskUsage = async () => {
   const freeDiskSpace = await DeviceInfo.getFreeDiskStorage();
@@ -138,7 +138,7 @@ export const getDiskUsage = async () => {
 
 /**
  * Gets the total percentage of used RAM on the device.
- * @returns {number} Current percentage of utilized RAM
+ * @returns Current percentage of utilized RAM
  */
 export const getRAMUsage = (): number => {
   return 20.0;
@@ -146,7 +146,7 @@ export const getRAMUsage = (): number => {
 
 /**
  * Gets the current ThermalState from the hardware
- * @returns {string} Current ThermalState from the hardware.
+ * @returns Current ThermalState from the hardware.
  */
 export const getThermalState = (): string => {
   return 'fair';
