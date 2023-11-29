@@ -53,7 +53,7 @@ export const multiply = (a: number, b: number): Promise<number> => {
 
 /**
  * Main exposed API endpoint for querying the current device "vibes".
- * @returns {{battery: Awaited<BatteryVibeType>, connectivity: ConnectionVibeType, cpuUsage: number, diskUsage: Awaited<number>, ramUsage: number ,thermalState: string}} an object containing all current device vibes.
+ * @returns {FullVibeCheckType} an object containing all current device vibes.
  */
 export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const battery = await getBatteryInfo();
@@ -80,7 +80,7 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
 
 /**
  * Gets the current Battery info from the DeviceInfo library
- * @returns {{batteryLevel: number | undefined, batteryState: BatteryState | undefined, lowPowerMode: boolean | undefined, isBatteryCharging: boolean | undefined }} An object that contains all data related to Battery Info
+ * @returns {BatteryVibeType} An BatteryVibeType object that contains all data related to Battery Info
  */
 export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
   const isBatteryCharging = await DeviceInfo.isBatteryCharging();
@@ -98,7 +98,7 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
 
 /**
  * Gets the current Connection info from the Reachability library
- * @returns {connection:{isConnected: boolean, isInternetReachable: boolean, type: string, details: {isConnectionExpensive: boolean, cellularGeneration: string}}} An object that contains all data related to Connection Info
+ * @returns {ConnectionVibeType} An object that contains all data related to Connection Info
  */
 export const getConnectionInfo = (): ConnectionVibeType => {
   console.log('getConnectionVibe');
