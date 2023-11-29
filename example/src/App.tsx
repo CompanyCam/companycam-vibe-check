@@ -1,19 +1,23 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'companycam-vibe-check';
+import { getCurrentVibe, type FullVibeCheckType } from 'companycam-vibe-check';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [info, setInfo] = React.useState<FullVibeCheckType>();
 
-  // I am a meaningless comment
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+    const lookAtVibe = async () => {
+      const vibe = await getCurrentVibe();
+      setInfo(vibe);
+    };
+
+    lookAtVibe();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Device Info: {JSON.stringify(info)} </Text>
     </View>
   );
 }
