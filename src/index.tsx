@@ -51,6 +51,10 @@ export const multiply = (a: number, b: number): Promise<number> => {
   return CompanycamVibeCheck.multiply(a, b);
 };
 
+/**
+ * Main exposed API endpoint for querying the current device "vibes".
+ * @returns {{battery: Awaited<BatteryVibeType>, connectivity: ConnectionVibeType, cpuUsage: number, diskUsage: Awaited<number>, ramUsage: number ,thermalState: string}} an object containing all current device vibes.
+ */
 export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const battery = await getBatteryInfo();
   const connectivity = getConnectionInfo();
@@ -73,6 +77,11 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
 // TODO: Add in threshold for battery level notifications
 // EX: If the battery level is < X%, we should notify the user
 ///
+
+/**
+ * Gets the current Battery info from the DeviceInfo library
+ * @returns {{batteryLevel: number | undefined, batteryState: BatteryState | undefined, lowPowerMode: boolean | undefined, isBatteryCharging: boolean | undefined }} An object that contains all data related to Battery Info
+ */
 export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
   const isBatteryCharging = await DeviceInfo.isBatteryCharging();
   const { batteryLevel, batteryState, lowPowerMode } =
@@ -87,6 +96,10 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
   return batteryVibe;
 };
 
+/**
+ * Gets the current Connection info from the Reachability library
+ * @returns {connection:{isConnected: boolean, isInternetReachable: boolean, type: string, details: {isConnectionExpensive: boolean, cellularGeneration: string}}} An object that contains all data related to Connection Info
+ */
 export const getConnectionInfo = (): ConnectionVibeType => {
   console.log('getConnectionVibe');
   const connectionVibe = {
@@ -104,10 +117,18 @@ export const getConnectionInfo = (): ConnectionVibeType => {
   return connectionVibe;
 };
 
+/**
+ * Gets the percentage of the CPU currently being used.
+ * @returns {number} Current CPU usage percentage
+ */
 export const getCPUUsage = (): number => {
   return 20.0;
 };
 
+/**
+ * Gets the total percentage of used disk space on the device from the DeviceInfo library.
+ * @returns {number} Current percentage of utilized disk space
+ */
 export const getDiskUsage = async () => {
   const freeDiskSpace = await DeviceInfo.getFreeDiskStorage();
   const totalDiskSpace = await DeviceInfo.getTotalDiskCapacity();
@@ -115,10 +136,18 @@ export const getDiskUsage = async () => {
   return percentageOfDiskSpaceUsed;
 };
 
+/**
+ * Gets the total percentage of used RAM on the device.
+ * @returns {number} Current percentage of utilized RAM
+ */
 export const getRAMUsage = (): number => {
   return 20.0;
 };
 
+/**
+ * Gets the current ThermalState from the hardware
+ * @returns {string} Current ThermalState from the hardware.
+ */
 export const getThermalState = (): string => {
   return 'fair';
 };
