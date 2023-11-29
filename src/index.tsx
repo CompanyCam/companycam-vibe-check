@@ -25,7 +25,7 @@ export type FullVibeCheckType = {
   cpuUsage: number;
   diskUsage: Awaited<number>;
   ramUsage: number;
-  thermalState: string;
+  thermalState: Awaited<string>;
 };
 
 type BatteryVibeType = {
@@ -61,8 +61,8 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const cpuUsage = getCPUUsage();
   const diskUsage = await getDiskUsage();
   const ramUsage = getRAMUsage();
-  const thermalState = getThermalState();
-
+  const thermalState = await getThermalState();
+  console.log(thermalState);
   return {
     battery,
     connectivity,
@@ -92,7 +92,6 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
     lowPowerMode,
     isBatteryCharging,
   };
-  console.log(batteryVibe);
   return batteryVibe;
 };
 
@@ -145,9 +144,37 @@ export const getRAMUsage = (): number => {
 };
 
 /**
+ * Normalizes the Android thermal states to iOS values.
+ * @param thermalState
+ * @returns A normalised string for the device's current thermal state.
+ */
+const normalizeAndroidThermalState = (thermalState: number): string => {
+  switch (thermalState) {
+    case 0:
+    case 1:
+      return 'nominal';
+    case 2:
+      return 'fair';
+    case 3:
+      return 'serious';
+    case 4:
+    case 5:
+    case 6:
+      return 'critical';
+    default:
+      return 'nominal';
+  }
+};
+
+/**
  * Gets the current ThermalState from the hardware
  * @returns Current ThermalState from the hardware.
  */
-export const getThermalState = (): string => {
-  return 'fair';
+export const getThermalState = async (): Promise<string> => {
+  const currentThermalState = await CompanycamVibeCheck.getThermalState();
+  if (Platform.OS === 'android') {
+    return normalizeAndroidThermalState(currentThermalState);
+  } else {
+    return currentThermalState;
+  }
 };

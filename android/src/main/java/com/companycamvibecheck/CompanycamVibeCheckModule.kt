@@ -4,6 +4,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
+import android.content.Context
+import android.os.PowerManager
 
 class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -17,6 +19,13 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun multiply(a: Double, b: Double, promise: Promise) {
     promise.resolve(a * b)
+  }
+  val powerManager = reactContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+  @ReactMethod
+  fun getThermalState(promise: Promise) {
+    
+    promise.resolve(powerManager.currentThermalStatus);
+    //promise.resolve("ANDROID FOOL")
   }
   // fun getCurrentVibes(promise: Promise) {
   //   promise.resolve();
