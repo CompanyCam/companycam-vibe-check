@@ -23,13 +23,8 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   val powerManager = reactContext.getSystemService(Context.POWER_SERVICE) as PowerManager
   @ReactMethod
   fun getThermalState(promise: Promise) {
-    
     promise.resolve(powerManager.currentThermalStatus);
-    //promise.resolve("ANDROID FOOL")
   }
-  // fun getCurrentVibes(promise: Promise) {
-  //   promise.resolve();
-  // }
 
   companion object {
     const val NAME = "CompanycamVibeCheck"
