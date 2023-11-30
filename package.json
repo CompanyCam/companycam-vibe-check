@@ -1,6 +1,6 @@
 {
-  "name": "companycam-vibe-check",
-  "version": "0.1.0",
+  "name": "@companycam/vibe-check",
+  "version": "0.1.0-local.1",
   "description": "Hardware logging library for CompanyCam",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -165,5 +165,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "@react-native-community/netinfo": "^11.1.1"
   }
 }
