@@ -24,7 +24,7 @@ export type FullVibeCheckType = {
   connectivity: ConnectionVibeType;
   cpuUsage: number;
   diskUsage: Awaited<number>;
-  ramUsage: number;
+  ramUsage: Awaited<number>;
   thermalState: Awaited<string>;
 };
 
@@ -60,7 +60,7 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const connectivity = getConnectionInfo();
   const cpuUsage = getCPUUsage();
   const diskUsage = await getDiskUsage();
-  const ramUsage = getRAMUsage();
+  const ramUsage = await getRAMUsage();
   const thermalState = await getThermalState();
   console.log(thermalState);
   return {
@@ -139,8 +139,11 @@ export const getDiskUsage = async () => {
  * Gets the total percentage of used RAM on the device.
  * @returns Current percentage of utilized RAM
  */
-export const getRAMUsage = (): number => {
-  return 20.0;
+export const getRAMUsage = async (): Promise<number> => {
+  console.log('lol');
+  const ramUsage = await CompanycamVibeCheck.getMemoryInfo();
+  console.log(ramUsage);
+  return ramUsage;
 };
 
 /**

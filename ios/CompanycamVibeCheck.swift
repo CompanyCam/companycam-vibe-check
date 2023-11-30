@@ -6,9 +6,14 @@ class CompanycamVibeCheck: NSObject {
     resolve(a*b)
   }
     
-    @objc(getThermalState: rejecter:)
-    func getThermalState(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+  @objc(getThermalState: rejecter:)
+  func getThermalState(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     let state = ProcessInfo.processInfo.thermalState
-      resolve(state)
-    }
+    resolve(state)
+  }
+
+  @objc(getMemoryInfo: rejecter:)
+  func getMemoryInfo(resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+    resolve(null);
+  }
 }

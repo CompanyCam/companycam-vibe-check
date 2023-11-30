@@ -9,6 +9,9 @@ RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
 RCT_EXTERN_METHOD(getThermalState: (RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getMemoryInfo: (RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;
