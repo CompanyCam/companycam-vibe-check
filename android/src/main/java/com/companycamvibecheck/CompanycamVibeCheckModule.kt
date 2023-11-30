@@ -34,14 +34,8 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   fun getMemoryInfo(promise: Promise) {
     val memoryInfo = ActivityManager.MemoryInfo()
     activityManager.getMemoryInfo(memoryInfo)
-    val availMem = memoryInfo.availMem;
+    val availMem = memoryInfo.totalMem - memoryInfo.availMem;
     promise.resolve(availMem.toString())
-  }
-
-  private fun getAvailableMemory(): ActivityManager.MemoryInfo {
-    return ActivityManager.MemoryInfo().also { memoryInfo ->
-        activityManager.getMemoryInfo(memoryInfo)
-    }
   }
 
   companion object {

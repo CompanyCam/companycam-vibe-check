@@ -40,7 +40,7 @@ class CompanycamVibeCheck: NSObject {
     let unformattedMemoryUsed = getMemoryUsedInBytesUsed()
     let formattedMemoryUsed: String
     if (unformattedMemoryUsed != nil) {
-        formattedMemoryUsed = String(format: "%f", unformattedMemoryUsed!)
+        formattedMemoryUsed = String(format: "%0f", unformattedMemoryUsed!)
     } else {
         formattedMemoryUsed = "unable to get memory value"
     }
