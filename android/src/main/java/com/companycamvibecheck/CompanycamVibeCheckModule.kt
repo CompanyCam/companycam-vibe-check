@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.content.Context
 import android.os.PowerManager
+import android.util.Log
 
 class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -32,13 +33,9 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun getMemoryInfo(promise: Promise) {
     val memoryInfo = ActivityManager.MemoryInfo()
-    // val activityManager = reactContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     activityManager.getMemoryInfo(memoryInfo)
-    val runtime = Runtime.getRuntime()
-    print("MEMORY INFO!!!")
-    print(memoryInfo.availMem)
-    promise.resolve(memoryInfo.availMem)
-    // promise.resolve(10)
+    val availMem = memoryInfo.availMem;
+    promise.resolve(availMem.toString())
   }
 
   private fun getAvailableMemory(): ActivityManager.MemoryInfo {
@@ -46,33 +43,6 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
         activityManager.getMemoryInfo(memoryInfo)
     }
   }
-
-
-//   private fun getMemoryInfo(): CharSequence? {
-//     val memoryInfo = ActivityManager.MemoryInfo()
-//     val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-//     activityManager.getMemoryInfo(memoryInfo)
-//     val runtime = Runtime.getRuntime()
-//     val builder = StringBuilder()
-//     builder.append("Available Memory: ")
-//     .append(memoryInfo.availMem)
-//     .append("\n")
-//     .append("Total Memory: ")
-//     .append(memoryInfo.totalMem)
-//     .append("")
-//     .append("Runtime Maximum Memory: ")
-//     .append(runtime.maxMemory())
-//     .append("")
-//     .append("Runtime Total Memory:")
-//     .append(runtime.totalMemory())
-//     .append("")
-//     .append("Runtime Free Memory:")
-//     .append(runtime.freeMemory())
-//     .append("")
-//     return builder.toString()
-//  }
-
-
 
   companion object {
     const val NAME = "CompanycamVibeCheck"
