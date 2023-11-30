@@ -7,7 +7,6 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.content.Context
 import android.os.PowerManager
-import android.util.Log
 
 class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
