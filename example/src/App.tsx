@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { getCurrentVibe, type FullVibeCheckType } from 'companycam-vibe-check';
-
+import { getCurrentVibe, type FullVibeCheckType } from '@companycam/vibe-check';
 export default function App() {
   const [info, setInfo] = React.useState<FullVibeCheckType>();
 
