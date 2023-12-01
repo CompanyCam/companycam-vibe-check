@@ -1,5 +1,6 @@
 package com.companycamvibecheck
 
+import android.app.ActivityManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -11,6 +12,7 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   val powerManager = reactContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+  val activityManager = reactContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
   
   override fun getName(): String {
     return NAME
@@ -24,6 +26,14 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
       4, 5, 6 -> "critical"
       else -> "nominal"
     }
+  }
+
+  @ReactMethod
+  fun getMemoryInfo(promise: Promise) {
+    val memoryInfo = ActivityManager.MemoryInfo()
+    activityManager.getMemoryInfo(memoryInfo)
+    val availMem = memoryInfo.totalMem - memoryInfo.availMem;
+    promise.resolve(availMem.toString())
   }
   @ReactMethod
   fun getThermalState(promise: Promise) {
