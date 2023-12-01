@@ -25,7 +25,7 @@ export type FullVibeCheckType = {
   cpuUsage: number;
   diskUsage: Awaited<number>;
   ramUsage: number;
-  thermalState: string;
+  thermalState: Awaited<string>;
 };
 
 type BatteryVibeType = {
@@ -61,8 +61,7 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const cpuUsage = getCPUUsage();
   const diskUsage = await getDiskUsage();
   const ramUsage = getRAMUsage();
-  const thermalState = getThermalState();
-
+  const thermalState = await getThermalState();
   return {
     battery,
     connectivity,
@@ -72,11 +71,6 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
     thermalState,
   };
 };
-
-///
-// TODO: Add in threshold for battery level notifications
-// EX: If the battery level is < X%, we should notify the user
-///
 
 /**
  * Gets the current Battery info from the DeviceInfo library
@@ -92,7 +86,6 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
     lowPowerMode,
     isBatteryCharging,
   };
-  console.log(batteryVibe);
   return batteryVibe;
 };
 
@@ -101,7 +94,6 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
  * @returns A ConnectionVibeType object that contains all data related to Connection Info
  */
 export const getConnectionInfo = (): ConnectionVibeType => {
-  console.log('getConnectionVibe');
   const connectionVibe = {
     connection: {
       isConnected: true,
@@ -148,6 +140,7 @@ export const getRAMUsage = (): number => {
  * Gets the current ThermalState from the hardware
  * @returns Current ThermalState from the hardware.
  */
-export const getThermalState = (): string => {
-  return 'fair';
+export const getThermalState = async (): Promise<string> => {
+  const currentThermalState = await CompanycamVibeCheck.getThermalState();
+  return currentThermalState;
 };
