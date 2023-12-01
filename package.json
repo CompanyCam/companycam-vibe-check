@@ -82,6 +82,7 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
+    "@react-native-community/netinfo": "*",
     "react": "*",
     "react-native": "*",
     "react-native-device-info": "*"
@@ -165,8 +166,5 @@
         }
       ]
     ]
-  },
-  "dependencies": {
-    "@react-native-community/netinfo": "^11.1.1"
   }
 }
