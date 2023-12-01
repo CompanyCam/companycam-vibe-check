@@ -1,5 +1,10 @@
 import { NativeModules, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import NetInfo, {
+  type NetInfoCellularGeneration,
+  type NetInfoStateType,
+} from '@react-native-community/netinfo';
+
 import type { BatteryState } from 'react-native-device-info/lib/typescript/internal/types';
 
 const LINKING_ERROR =
@@ -39,12 +44,15 @@ type ConnectionVibeType = {
   connection: {
     isConnected: boolean;
     isInternetReachable: boolean;
-    type: string;
-    details: {
-      isConnectionExpensive: boolean;
-      cellularGeneration: string;
-    };
-  };
+    type: NetInfoStateType;
+  } & NetInfoStateType extends 'cellular'
+    ? {
+        details: {
+          isConnectionExpensive: boolean;
+          cellularGeneration: NetInfoCellularGeneration;
+        };
+      }
+    : {};
 };
 
 export const multiply = (a: number, b: number): Promise<number> => {
@@ -57,7 +65,7 @@ export const multiply = (a: number, b: number): Promise<number> => {
  */
 export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const battery = await getBatteryInfo();
-  const connectivity = getConnectionInfo();
+  const connectivity = await getConnectionInfo();
   const cpuUsage = getCPUUsage();
   const diskUsage = await getDiskUsage();
   const memoryInUse = await getMemoryInUse();
@@ -71,11 +79,6 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
     thermalState,
   };
 };
-
-///
-// TODO: Add in threshold for battery level notifications
-// EX: If the battery level is < X%, we should notify the user
-///
 
 /**
  * Gets the current Battery info from the DeviceInfo library
@@ -98,16 +101,19 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
  * Gets the current Connection info from the Reachability library
  * @returns A ConnectionVibeType object that contains all data related to Connection Info
  */
-export const getConnectionInfo = (): ConnectionVibeType => {
+export const getConnectionInfo = async (): Promise<ConnectionVibeType> => {
+  const connection = await NetInfo.fetch();
   const connectionVibe = {
     connection: {
-      isConnected: true,
-      isInternetReachable: true,
-      type: 'cellular',
-      details: {
-        isConnectionExpensive: false,
-        cellularGeneration: '4g',
-      },
+      isConnected: connection.isConnected,
+      isInternetReachable: connection.isInternetReachable,
+      type: connection.type,
+      ...(connection.type === 'cellular' && {
+        details: {
+          isConnectionExpensive: connection.details.isConnectionExpensive,
+          cellularGeneration: connection.details.cellularGeneration,
+        },
+      }),
     },
   };
 
@@ -143,37 +149,20 @@ export const getMemoryInUse = async (): Promise<number> => {
 };
 
 /**
- * Normalizes the Android thermal states to iOS values.
- * @param thermalState
- * @returns A normalised string for the device's current thermal state.
- */
-const normalizeAndroidThermalState = (thermalState: number): string => {
-  switch (thermalState) {
-    case 0:
-    case 1:
-      return 'nominal';
-    case 2:
-      return 'fair';
-    case 3:
-      return 'serious';
-    case 4:
-    case 5:
-    case 6:
-      return 'critical';
-    default:
-      return 'nominal';
-  }
-};
-
-/**
  * Gets the current ThermalState from the hardware
  * @returns Current ThermalState from the hardware.
  */
 export const getThermalState = async (): Promise<string> => {
   const currentThermalState = await CompanycamVibeCheck.getThermalState();
-  if (Platform.OS === 'android') {
-    return normalizeAndroidThermalState(currentThermalState);
-  } else {
-    return currentThermalState;
-  }
+  return currentThermalState;
+};
+
+export default {
+  getCurrentVibe,
+  getBatteryInfo,
+  getConnectionInfo,
+  getCPUUsage,
+  getDiskUsage,
+  getMemoryInUse,
+  getThermalState,
 };

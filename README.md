@@ -1,10 +1,5 @@
 # companycam-vibe-check
 
-# TODOS AND THOUGHTS
-
-- Kick around ideas for error handling
-- Determine minimum system requirements for the library
-
 ## Hardware logging library for CompanyCam
 
 Welcome to the CompanyCam Vibe Check repo. This library is largely for exposing hardware information in some key areas that an app may be known to slow down in. As we all know, the largest issues app developers are faced with stem from performance issues. Sometimes we can mitigate for these issues, and sometimes we cannot. This library aims to expose pertinent information related to areas in the hardware that can cause performance issues.

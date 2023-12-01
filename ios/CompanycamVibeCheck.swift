@@ -1,50 +1,34 @@
 @objc(CompanycamVibeCheck)
 class CompanycamVibeCheck: NSObject {
-
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
-  }
-    
-  @objc(getThermalState: rejecter:)
-  func getThermalState(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+    @objc(getThermalState: rejecter:)
+    func getThermalState(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     let state = ProcessInfo.processInfo.thermalState
     resolve(state)
   }
 
-  func mach_task_self() -> task_t {
-    return mach_task_self_
-  }
-
-  func getMemoryUsedInBytesUsed() -> Float? {
-    var info = mach_task_basic_info()
-    var count = mach_msg_type_number_t(MemoryLayout.size(ofValue: info) / MemoryLayout<integer_t>.size)
-    let kerr = withUnsafeMutablePointer(to: &info) { infoPtr in
-        return infoPtr.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { (machPtr: UnsafeMutablePointer<integer_t>) in
-            return task_info(
-                mach_task_self(),
-                task_flavor_t(MACH_TASK_BASIC_INFO),
-                machPtr,
-                &count
-            )
+    func memoryFootprint() -> mach_vm_size_t? {
+        // The `TASK_VM_INFO_COUNT` and `TASK_VM_INFO_REV1_COUNT` macros are too
+        // complex for the Swift C importer, so we have to define them ourselves.
+        let TASK_VM_INFO_COUNT = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size)
+        let TASK_VM_INFO_REV1_COUNT = mach_msg_type_number_t(MemoryLayout.offset(of: \task_vm_info_data_t.min_address)! / MemoryLayout<integer_t>.size)
+        var info = task_vm_info_data_t()
+        var count = TASK_VM_INFO_COUNT
+        let kr = withUnsafeMutablePointer(to: &info) { infoPtr in
+            infoPtr.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { intPtr in
+                task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), intPtr, &count)
+            }
         }
+        guard
+            kr == KERN_SUCCESS,
+            count >= TASK_VM_INFO_REV1_COUNT
+        else { return nil }
+        return info.phys_footprint
     }
-    guard kerr == KERN_SUCCESS else {
-        return nil
-    }  
-    return Float(info.resident_size)
-  }
-
+    
   @objc(getMemoryInfo: rejecter:)
   func getMemoryInfo(resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-    let unformattedMemoryUsed = getMemoryUsedInBytesUsed()
-    let formattedMemoryUsed: String
-    if (unformattedMemoryUsed != nil) {
-        formattedMemoryUsed = String(format: "%0f", unformattedMemoryUsed!)
-    } else {
-        formattedMemoryUsed = "unable to get memory value"
-    }
-    resolve(formattedMemoryUsed);
+    let memoryUsed = memoryFootprint()
+    resolve(memoryUsed);
 
   }
 }
