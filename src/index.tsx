@@ -27,20 +27,18 @@ const CompanycamVibeCheck = NativeModules.CompanycamVibeCheck
 export type FullVibeCheckType = {
   battery: Awaited<BatteryVibeType>;
   connectivity: ConnectionVibeType;
-  cpuUsage: number;
   diskUsage: Awaited<number>;
   memoryInUse: Awaited<number>;
   thermalState: Awaited<string>;
 };
 
-type BatteryVibeType = {
+export type BatteryVibeType = {
   batteryLevel: number | undefined;
   batteryState: BatteryState | undefined;
   lowPowerMode: boolean | undefined;
-  isBatteryCharging: boolean;
 };
 
-type ConnectionVibeType = {
+export type ConnectionVibeType = {
   connection: {
     isConnected: boolean;
     isInternetReachable: boolean;
@@ -66,14 +64,34 @@ export const multiply = (a: number, b: number): Promise<number> => {
 export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
   const battery = await getBatteryInfo();
   const connectivity = await getConnectionInfo();
-  const cpuUsage = getCPUUsage();
   const diskUsage = await getDiskUsage();
   const memoryInUse = await getMemoryInUse();
   const thermalState = await getThermalState();
   return {
     battery,
     connectivity,
-    cpuUsage,
+    diskUsage,
+    memoryInUse,
+    thermalState,
+  };
+};
+
+/**
+ * Function to get device's current info without references to connectivity. This function is
+ * intentionally undocumented and should not be used outside of CompanyCam.
+ *
+ * @returns A promise with a FullVibeCheckType object that does not include connectivity.
+ */
+export const getNonConnectivityInfo = async (): Promise<
+  Omit<FullVibeCheckType, 'connectivity'>
+> => {
+  const battery = await getBatteryInfo();
+  const diskUsage = await getDiskUsage();
+  const memoryInUse = await getMemoryInUse();
+  const thermalState = await getThermalState();
+
+  return {
+    battery,
     diskUsage,
     memoryInUse,
     thermalState,
@@ -85,16 +103,21 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
  * @returns A BatteryVibeType object that contains all data related to Battery Info
  */
 export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
-  const isBatteryCharging = await DeviceInfo.isBatteryCharging();
+  // rather than make logs noisy, we silence them for this call
+  const warn = console.warn;
+  console.warn = () => {};
+
   const { batteryLevel, batteryState, lowPowerMode } =
     await DeviceInfo.getPowerState();
-  const batteryVibe = {
+
+  // restore console.warn
+  console.warn = warn;
+
+  return {
     batteryLevel,
     batteryState,
     lowPowerMode,
-    isBatteryCharging,
   };
-  return batteryVibe;
 };
 
 /**
@@ -118,14 +141,6 @@ export const getConnectionInfo = async (): Promise<ConnectionVibeType> => {
   };
 
   return connectionVibe;
-};
-
-/**
- * Gets the percentage of the CPU currently being used.
- * @returns Current CPU usage percentage
- */
-export const getCPUUsage = (): number => {
-  return 20.0;
 };
 
 /**
@@ -158,11 +173,12 @@ export const getThermalState = async (): Promise<string> => {
 };
 
 export default {
-  getCurrentVibe,
+  NetInfo,
   getBatteryInfo,
   getConnectionInfo,
-  getCPUUsage,
+  getCurrentVibe,
   getDiskUsage,
   getMemoryInUse,
+  getNonConnectivityInfo,
   getThermalState,
 };

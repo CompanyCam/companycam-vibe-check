@@ -24,7 +24,6 @@ As of right now, this library exposes the following information, through the `ge
     },
   },
   thermalState: 'fair',
-  cpuUsage: 20, // <-- percentage
   ramUsage: 20, // <-- percentage
   diskUsage: 80 // <-- percentage
 }
@@ -47,22 +46,20 @@ import { getCurrentVibes } from 'companycam-vibe-check';
 
 // ...elsewhere in your code
 const { vibes } = await NativeModules.VibeChecker.getCurrentVibes();
-
 ```
 
 ## API
 
 ### Methods
+
 ### getCurrentVibes()
 
-Gets the device's current hardware information. This function / method is the main entry point for this library. You SHOULDN'T need to use the other exposed functions. We have provided the more detail focused methods just to be thorough. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
+Gets the device's current hardware information. This function / method is the main entry point for this library. You SHOULDN'T need to use the other exposed functions. We have provided the more detail focused methods just to be thorough.
 
 ```tsx
-
 import { VibeChecker } from '@companycam/companycam-vibe-check';
 
 const { currentVibe } = await NativeModules.VibeChecker.getCurrentVibes();
-
 ```
 
 This method will return an object very similar to the below JSON object:
@@ -85,7 +82,6 @@ This method will return an object very similar to the below JSON object:
     },
   },
   thermalState: 'fair',
-  cpuUsage: 20, // <-- percentage
   ramUsage: 20, // <-- percentage
   diskUsage: 80 // <-- percentage
 }
@@ -101,7 +97,6 @@ import { VibeChecker } from '@companycam/companycam-vibe-check';
 await NativeModules.VibeChecker.setVibeTimeout(120);
 
 const { vibeTimeout } = NativeModules.VibeChecker.getVibeTimeout();
-
 ```
 
 The parameter for `setVibeTimeout()` is a `number` in `seconds`. The return value for `getVibeTimeout()` is a `number` in `seconds`.
@@ -110,13 +105,12 @@ The parameter for `setVibeTimeout()` is a `number` in `seconds`. The return valu
 
 ### getBatteryVibe()
 
-Gets the device's current Battery information. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
+Gets the device's current Battery information.
 
 ```tsx
 import { VibeChecker } from '@companycam/companycam-vibe-check';
 
 const { battery } = await NativeModules.VibeChecker.getBatteryVibe();
-
 ```
 
 This method will return an object very similar to the below JSON object:
@@ -130,16 +124,14 @@ This method will return an object very similar to the below JSON object:
   }
 ```
 
-
 ### getConnectionVibe()
 
-Gets the device's current Network Connection information. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
+Gets the device's current Network Connection information.
 
 ```tsx
 import { VibeChecker } from '@companycam/companycam-vibe-check';
 
 const { connection } = await NativeModules.VibeChecker.getConnectionVibe();
-
 ```
 
 This method will return an object very similar to the below JSON object:
@@ -156,84 +148,62 @@ This method will return an object very similar to the below JSON object:
   }
 ```
 
-
 ### getDiskUsage()
 
-Gets the device's current Disk usage, as a percentage. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
+Gets the device's current Disk usage, as a percentage.
 
 ```tsx
 import { VibeChecker } from '@companycam/companycam-vibe-check';
 
 const { diskUsage } = await NativeModules.VibeChecker.getDiskUsage();
-
 ```
 
 This method will return an object very similar to the below JSON object:
 
 ```js
-  diskUsage: 80 // <-- percentage
+diskUsage: 80; // <-- percentage
 ```
 
 ### getRamUsage()
 
-Gets the device's current RAM usage, as a percentage. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
+Gets the device's current RAM usage, as a percentage.
 
 ```tsx
 import { VibeChecker } from '@companycam/companycam-vibe-check';
 
 const { ramUsage } = await NativeModules.VibeChecker.getRamUsage();
-
 ```
 
 This method will return an object very similar to the below JSON object:
 
 ```js
-  ramUsage: 80 // <-- percentage
-```
-
-### getCPUUsage()
-
-Gets the device's current CPU usage, as a percentage. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
-
-```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
-
-const { cpuUsage } = await NativeModules.VibeChecker.getCPUUsage();
-
-```
-
-This method will return an object very similar to the below JSON object:
-
-```js
-  cpuUsage: 80 // <-- percentage
+ramUsage: 80; // <-- percentage
 ```
 
 ### getThermalState()
 
-Gets the device's current CPU usage, as a percentage. This information will be cached, and refreshed on a timer. (We haven't set this timer yet).
+Gets the device's current thermal state.
 
 ```tsx
 import { VibeChecker } from '@companycam/companycam-vibe-check';
 
 const { thermalState } = await NativeModules.VibeChecker.getThermalState();
-
 ```
 
 This method will return an object very similar to the below JSON object:
 
 ```js
-  thermalState: 'fair'
+thermalState: 'fair';
 ```
 
 📝 NOTE: Since `iOS` and `Android` expose different thermal states, we've normalized them. Currently we use `iOS` nomenclature for the different thermal states. Please refer to the table below.
 
-| thermalState | iOS Value  | Android Value                 |
+| thermalState | iOS Value  | Android Value                                        |
 | ------------ | ---------- | ---------------------------------------------------- |
-| `nominal`    | `nominal`  | `THERMAL_STATUS_NONE / THERMAL_STATUS_LIGHT` |
-| `fair`       | `fair`     | `THERMAL_STATUS_MODERATE` |
-| `serious`    | `serious`  | `THERMAL_STATUS_SEVERE` |
+| `nominal`    | `nominal`  | `THERMAL_STATUS_NONE / THERMAL_STATUS_LIGHT`         |
+| `fair`       | `fair`     | `THERMAL_STATUS_MODERATE`                            |
+| `serious`    | `serious`  | `THERMAL_STATUS_SEVERE`                              |
 | `critical`   | `critical` | `THERMAL_STATUS_CRITICAL / THERMAL_STATUS_EMERGENCY` |
-
 
 ## Return object potential values
 
@@ -268,16 +238,10 @@ This method will return an object very similar to the below JSON object:
 | ------------ | ------ | ---------------------------------------- |
 | thermalState | string | 'nominal', 'fair', 'serious', 'critical' |
 
-#### CPU Usage
-
-| Property     | Type   | Description                              |
-| ------------ | ------ | ---------------------------------------- |
-| cpuUsage | number | CPU Usage on the device from 0.0 to 1.0 |
-
 #### RAM Usage
 
-| Property     | Type   | Description                              |
-| ------------ | ------ | ---------------------------------------- |
+| Property | Type   | Description                             |
+| -------- | ------ | --------------------------------------- |
 | ramUsage | number | RAM Usage on the device from 0.0 to 1.0 |
 
 ## Contributing
