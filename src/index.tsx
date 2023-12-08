@@ -24,21 +24,21 @@ const CompanycamVibeCheck = NativeModules.CompanycamVibeCheck
       }
     );
 
-export type FullVibeCheckType = {
-  battery: Awaited<BatteryVibeType>;
-  connectivity: ConnectionVibeType;
+export type FullVibeCheck = {
+  battery: Awaited<BatteryVibe>;
+  connectivity: ConnectionVibe;
   diskUsage: Awaited<number>;
   memoryInUse: Awaited<number>;
   thermalState: Awaited<string>;
 };
 
-export type BatteryVibeType = {
+export type BatteryVibe = {
   batteryLevel: number | undefined;
   batteryState: BatteryState | undefined;
   lowPowerMode: boolean | undefined;
 };
 
-export type ConnectionVibeType = {
+export type ConnectionVibe = {
   connection: {
     isConnected: boolean;
     isInternetReachable: boolean;
@@ -53,15 +53,11 @@ export type ConnectionVibeType = {
     : {};
 };
 
-export const multiply = (a: number, b: number): Promise<number> => {
-  return CompanycamVibeCheck.multiply(a, b);
-};
-
 /**
  * Function to get device's current {@link https://github.com/CompanyCam/companycam-vibe-check/blob/main/README.md#getcurrentvibes | Vibes}.
- * @returns A FullVibeCheckType object that contains all current device vibes.
+ * @returns A FullVibeCheck object that contains all current device vibes.
  */
-export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
+export const getCurrentVibe = async (): Promise<FullVibeCheck> => {
   const battery = await getBatteryInfo();
   const connectivity = await getConnectionInfo();
   const diskUsage = await getDiskUsage();
@@ -80,10 +76,10 @@ export const getCurrentVibe = async (): Promise<FullVibeCheckType> => {
  * Function to get device's current info without references to connectivity. This function is
  * intentionally undocumented and should not be used outside of CompanyCam.
  *
- * @returns A promise with a FullVibeCheckType object that does not include connectivity.
+ * @returns A promise with a FullVibeCheck object that does not include connectivity.
  */
 export const getNonConnectivityInfo = async (): Promise<
-  Omit<FullVibeCheckType, 'connectivity'>
+  Omit<FullVibeCheck, 'connectivity'>
 > => {
   const battery = await getBatteryInfo();
   const diskUsage = await getDiskUsage();
@@ -100,9 +96,9 @@ export const getNonConnectivityInfo = async (): Promise<
 
 /**
  * Gets the current Battery info from the DeviceInfo library
- * @returns A BatteryVibeType object that contains all data related to Battery Info
+ * @returns A BatteryVibe object that contains all data related to Battery Info
  */
-export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
+export const getBatteryInfo = async (): Promise<BatteryVibe> => {
   // rather than make logs noisy, we silence them for this call
   const warn = console.warn;
   console.warn = () => {};
@@ -122,9 +118,9 @@ export const getBatteryInfo = async (): Promise<BatteryVibeType> => {
 
 /**
  * Gets the current Connection info from the Reachability library
- * @returns A ConnectionVibeType object that contains all data related to Connection Info
+ * @returns A ConnectionVibe object that contains all data related to Connection Info
  */
-export const getConnectionInfo = async (): Promise<ConnectionVibeType> => {
+export const getConnectionInfo = async (): Promise<ConnectionVibe> => {
   const connection = await NetInfo.fetch();
   const connectionVibe = {
     connection: {
