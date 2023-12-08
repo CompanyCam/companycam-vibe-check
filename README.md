@@ -39,6 +39,19 @@ yarn install @companycam/companycam-vibe-check
 yarn add companycam-vibe-check
 ```
 
+## System Requirements
+
+### iOS
+```
+iOS Version: 15.0
+```
+
+### Android
+
+```
+minSdkVersion: 24 
+```
+
 ## Usage
 
 ```js
