@@ -24,12 +24,14 @@ const CompanycamVibeCheck = NativeModules.CompanycamVibeCheck
       }
     );
 
+type ThermalSate = 'nominal' | 'fair' | 'serious' | 'critical' | null;
+
 export type FullVibeCheck = {
   battery: Awaited<BatteryVibe>;
   connectivity: ConnectionVibe;
   diskUsage: Awaited<number>;
   memoryInUse: Awaited<number>;
-  thermalState: Awaited<string>;
+  thermalState: Awaited<ThermalSate>;
 };
 
 export type BatteryVibe = {
@@ -163,7 +165,7 @@ export const getMemoryInUse = async (): Promise<number> => {
  * Gets the current ThermalState from the hardware
  * @returns Current ThermalState from the hardware.
  */
-export const getThermalState = async (): Promise<string> => {
+export const getThermalState = async (): Promise<ThermalSate> => {
   const currentThermalState = await CompanycamVibeCheck.getThermalState();
   return currentThermalState;
 };
