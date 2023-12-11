@@ -24,7 +24,19 @@ const CompanycamVibeCheck = NativeModules.CompanycamVibeCheck
       }
     );
 
-type ThermalSate = 'nominal' | 'fair' | 'serious' | 'critical' | null;
+type ThermalSate =
+  | 'nominal'
+  | 'fair'
+  | 'serious'
+  | 'critical'
+  | 'unsupported'
+  | null;
+
+type Connectivity = {
+  fetch: typeof NetInfo.fetch;
+  addEventListener: typeof NetInfo.addEventListener;
+  configure: typeof NetInfo.configure;
+};
 
 export type FullVibeCheck = {
   battery: Awaited<BatteryVibe>;
@@ -87,6 +99,7 @@ export const getNonConnectivityInfo = async (): Promise<
   const diskUsage = await getDiskUsage();
   const memoryInUse = await getMemoryInUse();
   const thermalState = await getThermalState();
+  console.log('thermalState in library: ', thermalState);
 
   return {
     battery,
@@ -166,12 +179,27 @@ export const getMemoryInUse = async (): Promise<number> => {
  * @returns Current ThermalState from the hardware.
  */
 export const getThermalState = async (): Promise<ThermalSate> => {
-  const currentThermalState = await CompanycamVibeCheck.getThermalState();
+  let currentThermalState = null;
+  try {
+    currentThermalState = await CompanycamVibeCheck.getThermalState();
+  } catch (error) {
+    console.log('error: ', error);
+  }
+  console.log('currentThermalState vibecheck: ', currentThermalState);
   return currentThermalState;
 };
 
+export const Connectivity = () => {
+  let connectivity = {} as Connectivity;
+  connectivity.fetch = NetInfo.fetch;
+  connectivity.addEventListener = NetInfo.addEventListener;
+  connectivity.configure = NetInfo.configure;
+
+  return connectivity;
+};
+
 export default {
-  NetInfo,
+  Connectivity,
   getBatteryInfo,
   getConnectionInfo,
   getCurrentVibe,
