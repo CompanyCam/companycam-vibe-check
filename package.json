@@ -1,6 +1,6 @@
 {
   "name": "@companycam/vibe-check",
-  "version": "0.1.0-local-3",
+  "version": "0.1.0-local-22",
   "description": "Hardware logging library for CompanyCam",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

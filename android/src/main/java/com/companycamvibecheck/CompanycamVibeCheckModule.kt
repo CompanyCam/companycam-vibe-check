@@ -24,7 +24,7 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
       2 -> "fair"
       3 -> "serious"
       4, 5, 6 -> "critical"
-      else -> "unsupported"
+      else -> "unknown"
     }
   }
 
@@ -35,7 +35,7 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
     val availMem = memoryInfo.totalMem - memoryInfo.availMem;
     promise.resolve(availMem.toString())
   }
-  
+
   @ReactMethod
   fun getThermalState(promise: Promise) {
     let osVer = android.os.Build.VERSION.SDK_INT;
