@@ -47,9 +47,9 @@ export type FullVibeCheck = {
 };
 
 export type BatteryVibe = {
-  batteryLevel: number | undefined;
-  batteryState: BatteryState | undefined;
-  lowPowerMode: boolean | undefined;
+  batteryLevel: number | null;
+  batteryState: BatteryState | null;
+  lowPowerMode: boolean | null;
 };
 
 export type ConnectionVibe = {
@@ -99,7 +99,6 @@ export const getNonConnectivityInfo = async (): Promise<
   const diskUsage = await getDiskUsage();
   const memoryInUse = await getMemoryInUse();
   const thermalState = await getThermalState();
-  console.log('thermalState in library: ', thermalState);
 
   return {
     battery,
@@ -180,7 +179,6 @@ export const getMemoryInUse = async (): Promise<number> => {
  */
 export const getThermalState = async (): Promise<ThermalState> => {
   const currentThermalState = await CompanycamVibeCheck.getThermalState();
-  console.log('currentThermalState vibecheck: ', currentThermalState);
 
   return currentThermalState;
 };

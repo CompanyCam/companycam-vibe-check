@@ -2,32 +2,17 @@ import Foundation
 
 @objc(CompanycamVibeCheck)
 class CompanycamVibeCheck: NSObject {
-
-
-    // private let notificationCenter: NotificationCenter
-    // NotificationCenter.default.addObserver(
-    // self,
-    // selector: #selector(reactToThermalStateChange(_:)),
-    // name: ProcessInfo.thermalStateDidChangeNotification,
-    // object: nil
-    // )
+  let notificationCenter: NotificationCenter;
+  var currentThermalState: String
     
-//    NotificationCenter.default.addObserver(
-//        self,
-//        selector: #selector(self.batteryLevelChanged),
-//        name: UIDevice.batteryLevelDidChangeNotification,
-//        object: nil)
-
-    
-    let notificationCenter: NotificationCenter;
-    var currentThermalState: String
-    
-    override
+  override
   init () {
       self.notificationCenter = NotificationCenter.default;
-      let temp = ProcessInfo.processInfo.thermalState;
-      self.currentThermalState = "unknown";
+      let initThermalState = ProcessInfo.processInfo.thermalState;
+      self.currentThermalState = "";
       super.init();
+      self.parseThermalState(thermalState: initThermalState);
+      
       
       self.notificationCenter.addObserver(
         self,
@@ -41,36 +26,30 @@ class CompanycamVibeCheck: NSObject {
     self.notificationCenter.removeObserver(self);
   }
 
-    @objc
-    func queryThermalState(_ notification: NSNotification) -> Void {
-      print("hello world")
-      print(notification.name)
+
+  func parseThermalState(thermalState: ProcessInfo.ThermalState) -> Void {
+    switch thermalState {
+      case .nominal:
+          self.currentThermalState = "nominal"
+      case .fair:
+          self.currentThermalState = "fair"
+      case .serious:
+          self.currentThermalState = "serious"
+      case .critical:
+          self.currentThermalState = "critical"
+      @unknown default:
+          self.currentThermalState = "unknown"
+      }
+  }
+
+  @objc
+  func queryThermalState(_ notification: NSNotification) -> Void {
     let state = ProcessInfo.processInfo.thermalState
-    // print state value to console
-    print("stateQuery: ', \(state)");
-      print("goodbye world")
-    // var stateString: String
-    switch state {
-    case .nominal:
-        self.currentThermalState = "nominal"
-    case .fair:
-        self.currentThermalState = "fair"
-    case .serious:
-        self.currentThermalState = "serious"
-    case .critical:
-        self.currentThermalState = "critical"
-    @unknown default:
-        self.currentThermalState = "unknown"
-    }
+    self.parseThermalState(thermalState: state);
   }
 
   @objc(getThermalState: rejecter:)
   func getThermalState(resolve: RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-      
-      // put all this business into a function because maybe this is the wrong way to do it
-    // let state = queryThermalState()
-
-      print("currentThermalState: ', \(self.currentThermalState)");
       resolve(self.currentThermalState)
   }
 
@@ -100,32 +79,3 @@ class CompanycamVibeCheck: NSObject {
 
   }
 }
-
-
-// public enum ThermalState {
-//     /// The thermal state is within normal limits.
-//     case nominal
-//     /// The thermal state is slightly elevated.
-//     case fair
-//     /// The thermal state is high.
-//     case serious
-//     /// The thermal state is significantly impacting the performance of the system and the device needs to cool down.
-//     case critical
-//   }
-
-//   /// Returns the current thermal state of the system (or nil if not called against the `current` device)
-//   public var thermalState: ThermalState? {
-//     guard isCurrent else { return nil }
-//     switch ProcessInfo().thermalState {
-//       case .nominal:
-//         return .nominal
-//       case .fair:
-//         return .fair
-//       case .serious:
-//         return .serious
-//       case .critical:
-//         return .critical
-//       @unknown default:
-//         return .nominal
-//     }
-//   }
