@@ -38,10 +38,10 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun getThermalState(promise: Promise) {
-    // let osVer = android.os.Build.VERSION.SDK_INT;
-    // if (osVer >= 29) {
-    //   promise.resolve(normalizeAndroidThermalState(powerManager.currentThermalStatus));
-    // }
+    let osVer = android.os.Build.VERSION.SDK_INT;
+    if (osVer >= 29) {
+      promise.resolve(normalizeAndroidThermalState(powerManager.currentThermalStatus));
+    }
     promise.resolve(normalizeAndroidThermalState(-1))
   }
 
