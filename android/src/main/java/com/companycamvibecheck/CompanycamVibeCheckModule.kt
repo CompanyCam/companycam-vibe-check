@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.content.Context
+import android.os.Build
 import android.os.PowerManager
 
 class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
@@ -38,8 +39,7 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun getThermalState(promise: Promise) {
-    let osVer = android.os.Build.VERSION.SDK_INT;
-    if (osVer >= 29) {
+    if (Build.VERSION.SDK_INT >= 29) {
       promise.resolve(normalizeAndroidThermalState(powerManager.currentThermalStatus));
     }
     promise.resolve(normalizeAndroidThermalState(-1))
