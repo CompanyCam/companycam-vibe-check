@@ -32,12 +32,6 @@ type ThermalState =
   | 'unknown'
   | null;
 
-type Connectivity = {
-  fetch: typeof NetInfo.fetch;
-  addEventListener: typeof NetInfo.addEventListener;
-  configure: typeof NetInfo.configure;
-};
-
 export type FullVibeCheck = {
   battery: Awaited<BatteryVibe>;
   connectivity: ConnectionVibe;
@@ -124,9 +118,9 @@ export const getBatteryInfo = async (): Promise<BatteryVibe> => {
   console.warn = warn;
 
   return {
-    batteryLevel,
-    batteryState,
-    lowPowerMode,
+    batteryLevel: batteryLevel || null,
+    batteryState: batteryState || null,
+    lowPowerMode: lowPowerMode || null,
   };
 };
 
@@ -183,17 +177,7 @@ export const getThermalState = async (): Promise<ThermalState> => {
   return currentThermalState;
 };
 
-export const Connectivity = () => {
-  let connectivity = {} as Connectivity;
-  connectivity.fetch = NetInfo.fetch;
-  connectivity.addEventListener = NetInfo.addEventListener;
-  connectivity.configure = NetInfo.configure;
-
-  return connectivity;
-};
-
 export default {
-  Connectivity,
   getBatteryInfo,
   getConnectionInfo,
   getCurrentVibe,
