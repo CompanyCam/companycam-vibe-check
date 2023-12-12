@@ -13,7 +13,6 @@ class CompanycamVibeCheck: NSObject {
       super.init();
       self.parseThermalState(thermalState: initThermalState);
       
-      
       self.notificationCenter.addObserver(
         self,
         selector: #selector(self.queryThermalState),
@@ -25,7 +24,6 @@ class CompanycamVibeCheck: NSObject {
   deinit {
     self.notificationCenter.removeObserver(self);
   }
-
 
   func parseThermalState(thermalState: ProcessInfo.ThermalState) -> Void {
     switch thermalState {
