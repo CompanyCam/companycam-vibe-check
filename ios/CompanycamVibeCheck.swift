@@ -1,9 +1,54 @@
+import Foundation
+
 @objc(CompanycamVibeCheck)
 class CompanycamVibeCheck: NSObject {
-    @objc(getThermalState: rejecter:)
-    func getThermalState(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+  let notificationCenter: NotificationCenter;
+  var currentThermalState: String
+    
+  override
+  init () {
+      self.notificationCenter = NotificationCenter.default;
+      let initThermalState = ProcessInfo.processInfo.thermalState;
+      self.currentThermalState = "";
+      super.init();
+      self.handleThermalState(thermalState: initThermalState);
+      
+      self.notificationCenter.addObserver(
+        self,
+        selector: #selector(self.queryThermalState),
+        name: ProcessInfo.thermalStateDidChangeNotification,
+        object: nil
+      );
+  }
+
+  deinit {
+    self.notificationCenter.removeObserver(self);
+  }
+
+  func handleThermalState(thermalState: ProcessInfo.ThermalState) -> Void {
+    switch thermalState {
+      case .nominal:
+          self.currentThermalState = "nominal"
+      case .fair:
+          self.currentThermalState = "fair"
+      case .serious:
+          self.currentThermalState = "serious"
+      case .critical:
+          self.currentThermalState = "critical"
+      @unknown default:
+          self.currentThermalState = "unknown"
+      }
+  }
+
+  @objc
+  func queryThermalState(_ notification: NSNotification) -> Void {
     let state = ProcessInfo.processInfo.thermalState
-    resolve(state)
+    self.handleThermalState(thermalState: state);
+  }
+
+  @objc(getThermalState: rejecter:)
+  func getThermalState(resolve: RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+      resolve(self.currentThermalState)
   }
 
     func memoryFootprint() -> mach_vm_size_t? {

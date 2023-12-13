@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.content.Context
+import android.os.Build
 import android.os.PowerManager
 
 class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
@@ -24,7 +25,7 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
       2 -> "fair"
       3 -> "serious"
       4, 5, 6 -> "critical"
-      else -> "nominal"
+      else -> "unknown"
     }
   }
 
@@ -35,9 +36,13 @@ class CompanycamVibeCheckModule(reactContext: ReactApplicationContext) :
     val availMem = memoryInfo.totalMem - memoryInfo.availMem;
     promise.resolve(availMem.toString())
   }
+
   @ReactMethod
   fun getThermalState(promise: Promise) {
-    promise.resolve(normalizeAndroidThermalState(powerManager.currentThermalStatus));
+    if (Build.VERSION.SDK_INT >= 29) {
+      promise.resolve(normalizeAndroidThermalState(powerManager.currentThermalStatus));
+    }
+    promise.resolve(normalizeAndroidThermalState(-1))
   }
 
   companion object {
