@@ -42,6 +42,7 @@ yarn add companycam-vibe-check
 ## System Requirements
 
 ### iOS
+
 ```
 iOS Version: 15.0
 ```
@@ -49,7 +50,7 @@ iOS Version: 15.0
 ### Android
 
 ```
-minSdkVersion: 24 
+minSdkVersion: 24
 ```
 
 ## Usage
@@ -67,7 +68,7 @@ const { vibes } = await NativeModules.VibeChecker.getCurrentVibes();
 
 ### getCurrentVibes()
 
-Gets the device's current hardware information. This function / method is the main entry point for this library. You SHOULDN'T need to use the other exposed functions. We have provided the more detail focused methods just to be thorough.
+Gets the device's current hardware information. This method is the main entry point for this library. Returns all of the results from the other functions this library exposes.
 
 ```tsx
 import { VibeChecker } from '@companycam/companycam-vibe-check';

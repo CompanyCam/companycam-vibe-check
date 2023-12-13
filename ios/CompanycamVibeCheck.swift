@@ -11,7 +11,7 @@ class CompanycamVibeCheck: NSObject {
       let initThermalState = ProcessInfo.processInfo.thermalState;
       self.currentThermalState = "";
       super.init();
-      self.parseThermalState(thermalState: initThermalState);
+      self.handleThermalState(thermalState: initThermalState);
       
       self.notificationCenter.addObserver(
         self,
@@ -25,7 +25,7 @@ class CompanycamVibeCheck: NSObject {
     self.notificationCenter.removeObserver(self);
   }
 
-  func parseThermalState(thermalState: ProcessInfo.ThermalState) -> Void {
+  func handleThermalState(thermalState: ProcessInfo.ThermalState) -> Void {
     switch thermalState {
       case .nominal:
           self.currentThermalState = "nominal"
@@ -43,7 +43,7 @@ class CompanycamVibeCheck: NSObject {
   @objc
   func queryThermalState(_ notification: NSNotification) -> Void {
     let state = ProcessInfo.processInfo.thermalState
-    self.parseThermalState(thermalState: state);
+    self.handleThermalState(thermalState: state);
   }
 
   @objc(getThermalState: rejecter:)
