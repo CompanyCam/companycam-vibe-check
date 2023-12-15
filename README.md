@@ -4,7 +4,7 @@
 
 Welcome to the CompanyCam Vibe Check repo. 
 
-This library is largely for exposing hardware information not readily available. Maintaining a high level of performance in our apps, is a large priority. Sometimes we can compensate for these issues, and sometimes we cannot. This library aims to expose hardware information commonly related to performance issues.
+This library is largely for exposing hardware information not readily available. Maintaining a high level of performance in our apps is a large priority. Sometimes we can compensate for these issues, and sometimes we cannot. This library aims to expose hardware information commonly related to performance issues.
 
 This library exposes the following information, through the `getCurrentVibes` method:
 
