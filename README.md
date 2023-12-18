@@ -1,42 +1,45 @@
-# companycam-vibe-check
+# @companycam/vibe-check
 
 ## Hardware logging library for CompanyCam
 
-Welcome to the CompanyCam Vibe Check repo. This library is largely for exposing hardware information in some key areas that an app may be known to slow down in. As we all know, the largest issues app developers are faced with stem from performance issues. Sometimes we can mitigate for these issues, and sometimes we cannot. This library aims to expose pertinent information related to areas in the hardware that can cause performance issues.
+Welcome to the CompanyCam Vibe Check repo. 
 
-As of right now, this library exposes the following information, through the `getCurrentVibes` method:
+This library is largely for exposing hardware information not readily available. Maintaining a high level of performance in our apps is a large priority. Sometimes we can compensate for these issues, and sometimes we cannot. This library aims to expose hardware information commonly related to performance issues.
+
+This library exposes the following information, through the `getCurrentVibes` method:
 
 ```js
 {
   battery: {
-    batteryLevel: 0.5,
-    batteryState: 'unplugged',
+    batteryLevel: 0.70202270953611340,
+    batteryState: 'charging',
     lowPowerMode: false,
-    isBatteryCharging: false,
   },
   connectivity: {
-    isConnected: true,
-    isInternetReachable: true,
-    type: 'cellular',
-    details: {
-      isConnectionExpensive: false,
-      cellularGeneration: '4g',
+    connection: {
+      isConnected: true,
+      isInternetReachable: true,
+      type: 'cellular',
+      details: {
+        isConnectionExpensive: false,
+        cellularGeneration: '4g',
+      },
     },
   },
-  thermalState: 'fair',
-  ramUsage: 20, // <-- percentage
-  diskUsage: 80 // <-- percentage
-}
+  diskUsage: 0.07020227095361134,
+  memoryInUse: 83193856,
+  thermalState: 'nominal',
+};
 ```
 
 ## Installation
 
 ```sh
-yarn install @companycam/companycam-vibe-check
+yarn install @companycam/vibe-check
 ```
 
 ```sh
-yarn add companycam-vibe-check
+yarn add @companycam/vibe-check
 ```
 
 ## System Requirements
@@ -56,10 +59,11 @@ minSdkVersion: 24
 ## Usage
 
 ```js
-import { getCurrentVibes } from 'companycam-vibe-check';
+import { getCurrentVibes, FullVibeCheck } from '@companycam/vibe-check';
 
 // ...elsewhere in your code
-const { vibes } = await NativeModules.VibeChecker.getCurrentVibes();
+
+const vibes: FullVibeCheck = yield call(getCurrentVibes);
 ```
 
 ## API
@@ -71,9 +75,9 @@ const { vibes } = await NativeModules.VibeChecker.getCurrentVibes();
 Gets the device's current hardware information. This method is the main entry point for this library. Returns all of the results from the other functions this library exposes.
 
 ```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
+import { getCurrentVibes, FullVibeCheck } from '@companycam/vibe-check';
 
-const { currentVibe } = await NativeModules.VibeChecker.getCurrentVibes();
+const vibes: FullVibeCheck = yield call(getCurrentVibes);
 ```
 
 This method will return an object very similar to the below JSON object:
@@ -81,42 +85,26 @@ This method will return an object very similar to the below JSON object:
 ```js
 {
   battery: {
-    batteryLevel: 0.5,
-    batteryState: 'unplugged',
+    batteryLevel: 0.70202270953611340,
+    batteryState: 'charging',
     lowPowerMode: false,
-    isBatteryCharging: false,
   },
   connectivity: {
-    isConnected: true,
-    isInternetReachable: true,
-    type: 'cellular',
-    details: {
-      isConnectionExpensive: false,
-      cellularGeneration: '4g',
+    connection: {
+      isConnected: true,
+      isInternetReachable: true,
+      type: 'cellular',
+      details: {
+        isConnectionExpensive: false,
+        cellularGeneration: '4g',
+      },
     },
   },
-  thermalState: 'fair',
-  ramUsage: 20, // <-- percentage
-  diskUsage: 80 // <-- percentage
-}
+  diskUsage: 0.07020227095361134,
+  memoryInUse: 83193856,
+  thermalState: 'nominal',
+};
 ```
-
-### setVibeTimeout() / getVibeTimeout()
-
-This method allows you to customize how long the library caches the hardware information. Currently the default for the timeout is X seconds. Setting this value to 0 will query the hardware, in real time, instead of relying on the cached values.
-
-```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
-
-await NativeModules.VibeChecker.setVibeTimeout(120);
-
-const { vibeTimeout } = NativeModules.VibeChecker.getVibeTimeout();
-```
-
-The parameter for `setVibeTimeout()` is a `number` in `seconds`. The return value for `getVibeTimeout()` is a `number` in `seconds`.
-
-📝 NOTE: In the future we may allow configuration on the time measurements (seconds vs. minutes, etc.)
-
 ### getBatteryVibe()
 
 Gets the device's current Battery information.
@@ -138,14 +126,14 @@ This method will return an object very similar to the below JSON object:
   }
 ```
 
-### getConnectionVibe()
+### getConnectionInfo()
 
 Gets the device's current Network Connection information.
 
 ```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
+import { getConnectionInfo } from '@companycam/vibe-check';
 
-const { connection } = await NativeModules.VibeChecker.getConnectionVibe();
+const { connection } = await getConnectionInfo();
 ```
 
 This method will return an object very similar to the below JSON object:
@@ -167,15 +155,15 @@ This method will return an object very similar to the below JSON object:
 Gets the device's current Disk usage, as a percentage.
 
 ```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
+import { getDiskUsage } from '@companycam/vibe-check';
 
-const { diskUsage } = await NativeModules.VibeChecker.getDiskUsage();
+const { diskUsage } = await getDiskUsage();
 ```
 
 This method will return an object very similar to the below JSON object:
 
 ```js
-diskUsage: 80; // <-- percentage
+diskUsage: 0.80; // <-- percentage
 ```
 
 ### getRamUsage()
@@ -183,15 +171,15 @@ diskUsage: 80; // <-- percentage
 Gets the device's current RAM usage, as a percentage.
 
 ```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
+import { getRamUsage } from '@companycam/vibe-check';
 
-const { ramUsage } = await NativeModules.VibeChecker.getRamUsage();
+const { ramUsage } = await getRamUsage();
 ```
 
 This method will return an object very similar to the below JSON object:
 
 ```js
-ramUsage: 80; // <-- percentage
+ramUsage: 0.80; // <-- percentage
 ```
 
 ### getThermalState()
@@ -199,9 +187,9 @@ ramUsage: 80; // <-- percentage
 Gets the device's current thermal state.
 
 ```tsx
-import { VibeChecker } from '@companycam/companycam-vibe-check';
+import { getThermalState } from '@companycam/vibe-check';
 
-const { thermalState } = await NativeModules.VibeChecker.getThermalState();
+const { thermalState } = await getThermalState();
 ```
 
 This method will return an object very similar to the below JSON object:
@@ -218,6 +206,7 @@ thermalState: 'fair';
 | `fair`       | `fair`     | `THERMAL_STATUS_MODERATE`                            |
 | `serious`    | `serious`  | `THERMAL_STATUS_SEVERE`                              |
 | `critical`   | `critical` | `THERMAL_STATUS_CRITICAL / THERMAL_STATUS_EMERGENCY` |
+| `unknown` | `unknown` | `unknown` |
 
 ## Return object potential values
 
@@ -225,38 +214,37 @@ thermalState: 'fair';
 
 | Property     | Type   | Description                                      |
 | ------------ | ------ | ------------------------------------------------ |
-| batteryLevel | number | The battery level on the device, from 0.0 to 1.0 |
-| batteryState | string | 'unknown', 'unplugged, 'charging'                |
-| lowPowerMode | bool   | Whether or not the device is in low power mode   |
-| isCharging   | bool   | Whether or not the device is charging            |
+| `batteryLevel` | `number` | `The battery level on the device, from 0.0 to 1.0` |
+| `batteryState` | `string` | `unknown`, `unplugged`, `charging`, `full`        |
+| `lowPowerMode` | `bool`   | `Whether or not the device is in low power mode`  |
 
 #### Connectivity
 
 | Property            | Type   | Description                                                                    |
 | ------------------- | ------ | ------------------------------------------------------------------------------ |
-| isConnected         | bool   | Whether or not the device is connected to the internet                         |
-| isInternetReachable | bool   | Whether or not the device is connected to the internet                         |
-| type                | string | 'none', 'unknown', 'cellular', 'wifi', 'bluetooth', 'ethernet', 'wimax', 'vpn' |
-| details             | object | See below                                                                      |
+| `isConnected`         | `bool`   | `Whether or not the device is connected to the internet`                         |
+| `isInternetReachable` | `bool`   | `Whether or not the device is connected to the internet`                         |
+| `type`                | `string` | `none`, `unknown`, `cellular`, `wifi`, `bluetooth`, `ethernet`, `wimax`, `vpn` |
+| `details`             | `object` | `See below`                                                                      |
 
 ##### Connectivity Details
 
 | Property              | Type   | Description                                |
 | --------------------- | ------ | ------------------------------------------ |
-| isConnectionExpensive | bool   | Whether or not the connection is expensive |
-| cellularGeneration    | string | '2g', '3g', '4g', '5g', 'unknown'          |
+| `isConnectionExpensive` | `bool`   | `Whether or not the connection is expensive` |
+| `cellularGeneration`    | `string` | `2g`, `3g`, `4g`, `5g`, `unknown`          |
 
 #### Thermal State
 
 | Property     | Type   | Description                              |
 | ------------ | ------ | ---------------------------------------- |
-| thermalState | string | 'nominal', 'fair', 'serious', 'critical' |
+| `thermalState` | `string` | `nominal`, `fair`, `serious`, `critical` |
 
 #### RAM Usage
 
 | Property | Type   | Description                             |
 | -------- | ------ | --------------------------------------- |
-| ramUsage | number | RAM Usage on the device from 0.0 to 1.0 |
+| `ramUsage` | `number` | `RAM Usage on the device from 0.0 to 1.0` |
 
 ## Contributing
 
