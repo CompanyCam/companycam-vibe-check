@@ -35,7 +35,6 @@ type ThermalState =
 export type FullVibeCheck = {
   battery: Awaited<BatteryVibe>;
   connectivity: ConnectionVibe;
-  diskUsage: Awaited<number>;
   memoryInUse: Awaited<number>;
   thermalState: Awaited<ThermalState>;
 };
@@ -68,13 +67,11 @@ export type ConnectionVibe = {
 export const getCurrentVibe = async (): Promise<FullVibeCheck> => {
   const battery = await getBatteryInfo();
   const connectivity = await getConnectionInfo();
-  const diskUsage = await getDiskUsage();
   const memoryInUse = await getMemoryInUse();
   const thermalState = await getThermalState();
   return {
     battery,
     connectivity,
-    diskUsage,
     memoryInUse,
     thermalState,
   };
@@ -90,13 +87,11 @@ export const getNonConnectivityInfo = async (): Promise<
   Omit<FullVibeCheck, 'connectivity'>
 > => {
   const battery = await getBatteryInfo();
-  const diskUsage = await getDiskUsage();
   const memoryInUse = await getMemoryInUse();
   const thermalState = await getThermalState();
 
   return {
     battery,
-    diskUsage,
     memoryInUse,
     thermalState,
   };
@@ -141,17 +136,6 @@ export const getConnectionInfo = async (): Promise<ConnectionVibe> => {
 };
 
 /**
- * Gets the total percentage of used disk space on the device from the DeviceInfo library.
- * @returns Current percentage of utilized disk space
- */
-export const getDiskUsage = async () => {
-  const freeDiskSpace = await DeviceInfo.getFreeDiskStorage();
-  const totalDiskSpace = await DeviceInfo.getTotalDiskCapacity();
-  const percentageOfDiskSpaceUsed = freeDiskSpace / totalDiskSpace;
-  return percentageOfDiskSpaceUsed;
-};
-
-/**
  * Gets the total percentage of used RAM on the device.
  * @returns Current percentage of utilized RAM
  */
@@ -174,7 +158,6 @@ export default {
   getBatteryInfo,
   getConnectionInfo,
   getCurrentVibe,
-  getDiskUsage,
   getMemoryInUse,
   getNonConnectivityInfo,
   getThermalState,
