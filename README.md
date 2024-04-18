@@ -2,7 +2,7 @@
 
 ## Hardware logging library for CompanyCam
 
-Welcome to the CompanyCam Vibe Check repo. 
+Welcome to the CompanyCam Vibe Check repo.
 
 This library is largely for exposing hardware information not readily available. Maintaining a high level of performance in our apps is a large priority. Sometimes we can compensate for these issues, and sometimes we cannot. This library aims to expose hardware information commonly related to performance issues.
 
@@ -26,7 +26,6 @@ This library exposes the following information, through the `getCurrentVibes` me
       },
     },
   },
-  diskUsage: 0.07020227095361134,
   memoryInUse: 83193856,
   thermalState: 'nominal',
 };
@@ -100,11 +99,11 @@ This method will return an object very similar to the below JSON object:
       },
     },
   },
-  diskUsage: 0.07020227095361134,
   memoryInUse: 83193856,
   thermalState: 'nominal',
 };
 ```
+
 ### getBatteryVibe()
 
 Gets the device's current Battery information.
@@ -150,22 +149,6 @@ This method will return an object very similar to the below JSON object:
   }
 ```
 
-### getDiskUsage()
-
-Gets the device's current Disk usage, as a percentage.
-
-```tsx
-import { getDiskUsage } from '@companycam/vibe-check';
-
-const { diskUsage } = await getDiskUsage();
-```
-
-This method will return an object very similar to the below JSON object:
-
-```js
-diskUsage: 0.80; // <-- percentage
-```
-
 ### getRamUsage()
 
 Gets the device's current RAM usage, as a percentage.
@@ -179,7 +162,7 @@ const { ramUsage } = await getRamUsage();
 This method will return an object very similar to the below JSON object:
 
 ```js
-ramUsage: 0.80; // <-- percentage
+ramUsage: 0.8; // <-- percentage
 ```
 
 ### getThermalState()
@@ -206,44 +189,44 @@ thermalState: 'fair';
 | `fair`       | `fair`     | `THERMAL_STATUS_MODERATE`                            |
 | `serious`    | `serious`  | `THERMAL_STATUS_SEVERE`                              |
 | `critical`   | `critical` | `THERMAL_STATUS_CRITICAL / THERMAL_STATUS_EMERGENCY` |
-| `unknown` | `unknown` | `unknown` |
+| `unknown`    | `unknown`  | `unknown`                                            |
 
 ## Return object potential values
 
 #### Battery
 
-| Property     | Type   | Description                                      |
-| ------------ | ------ | ------------------------------------------------ |
+| Property       | Type     | Description                                        |
+| -------------- | -------- | -------------------------------------------------- |
 | `batteryLevel` | `number` | `The battery level on the device, from 0.0 to 1.0` |
-| `batteryState` | `string` | `unknown`, `unplugged`, `charging`, `full`        |
-| `lowPowerMode` | `bool`   | `Whether or not the device is in low power mode`  |
+| `batteryState` | `string` | `unknown`, `unplugged`, `charging`, `full`         |
+| `lowPowerMode` | `bool`   | `Whether or not the device is in low power mode`   |
 
 #### Connectivity
 
-| Property            | Type   | Description                                                                    |
-| ------------------- | ------ | ------------------------------------------------------------------------------ |
-| `isConnected`         | `bool`   | `Whether or not the device is connected to the internet`                         |
-| `isInternetReachable` | `bool`   | `Whether or not the device is connected to the internet`                         |
+| Property              | Type     | Description                                                                    |
+| --------------------- | -------- | ------------------------------------------------------------------------------ |
+| `isConnected`         | `bool`   | `Whether or not the device is connected to the internet`                       |
+| `isInternetReachable` | `bool`   | `Whether or not the device is connected to the internet`                       |
 | `type`                | `string` | `none`, `unknown`, `cellular`, `wifi`, `bluetooth`, `ethernet`, `wimax`, `vpn` |
-| `details`             | `object` | `See below`                                                                      |
+| `details`             | `object` | `See below`                                                                    |
 
 ##### Connectivity Details
 
-| Property              | Type   | Description                                |
-| --------------------- | ------ | ------------------------------------------ |
+| Property                | Type     | Description                                  |
+| ----------------------- | -------- | -------------------------------------------- |
 | `isConnectionExpensive` | `bool`   | `Whether or not the connection is expensive` |
-| `cellularGeneration`    | `string` | `2g`, `3g`, `4g`, `5g`, `unknown`          |
+| `cellularGeneration`    | `string` | `2g`, `3g`, `4g`, `5g`, `unknown`            |
 
 #### Thermal State
 
-| Property     | Type   | Description                              |
-| ------------ | ------ | ---------------------------------------- |
+| Property       | Type     | Description                              |
+| -------------- | -------- | ---------------------------------------- |
 | `thermalState` | `string` | `nominal`, `fair`, `serious`, `critical` |
 
 #### RAM Usage
 
-| Property | Type   | Description                             |
-| -------- | ------ | --------------------------------------- |
+| Property   | Type     | Description                               |
+| ---------- | -------- | ----------------------------------------- |
 | `ramUsage` | `number` | `RAM Usage on the device from 0.0 to 1.0` |
 
 ## Contributing
