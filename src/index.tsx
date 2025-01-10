@@ -102,6 +102,15 @@ export const getNonConnectivityInfo = async (): Promise<
  * @returns A BatteryVibe object that contains all data related to Battery Info
  */
 export const getBatteryInfo = async (): Promise<BatteryVibe> => {
+  const isEmulator = DeviceInfo.isEmulatorSync();
+  if (isEmulator) {
+    return {
+      batteryLevel: null,
+      batteryState: null,
+      lowPowerMode: null,
+    };
+  }
+
   const { batteryLevel, batteryState, lowPowerMode } =
     await DeviceInfo.getPowerState();
 
